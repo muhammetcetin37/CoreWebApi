@@ -6,6 +6,11 @@ namespace HttpStatusCode.Infrastructure.Contex
 {
     public class SqlDbContext : DbContext
     {
+
+        public SqlDbContext()
+        {
+
+        }
         public SqlDbContext(DbContextOptions<SqlDbContext> option) : base(option)
         {
 
