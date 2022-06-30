@@ -1,4 +1,6 @@
 using HttpStatusCode.Infrastructure.Contex;
+using HttpStatusCode.Infrastructure.Repository.Abstract;
+using HttpStatusCode.Infrastructure.Repository.Concrete;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,10 @@ builder.Services.AddDbContext<SqlDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("WebApiDb"));
 });
+//category servisini container içerisine register ediyoruz
+builder.Services.AddScoped<ICategoryDAL, CategoryDAL>();
+
+
 
 var app = builder.Build();
 
