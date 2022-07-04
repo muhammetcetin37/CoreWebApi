@@ -17,6 +17,8 @@ builder.Services.AddDbContext<SqlDbContext>(options =>
 });
 //category servisini container içerisine register ediyoruz
 builder.Services.AddScoped<ICategoryDAL, CategoryDAL>();
+builder.Services.AddScoped<ISehirDAL, SehirDAL>();
+builder.Services.AddScoped<IilceDAL, IlceDAL>();
 
 
 
