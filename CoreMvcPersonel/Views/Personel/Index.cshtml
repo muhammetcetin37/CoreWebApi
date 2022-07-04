@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Personel>
+<a asp-action="Create" class="btn btn-primary">Yeni Personel</a>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Adi</th>
+            <th>Soyadi</th>
+            <th>TcNo</th>
+            <th>Gsm</th>
+            <th>Email</th>
+            <th>Photo</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var personel in Model)
+        {
+            <tr>
+                <td>@personel.Id</td>
+                <td>@personel.Ad</td>
+                <td>@personel.Soyad</td>
+                <td>@personel.TcNo</td>
+                <td>@personel.Gsm</td>
+                <td>@personel.Email</td>
+                @{
+                    byte[]? photo;
+                    string imgSrc = null;
+                    if (personel.Fotograflar.Count > 0)
+                    {
+                        foreach (var  resim in  personel.Fotograflar)
+                        {
+                            photo = resim.Foto;  
+                             
+                            if(photo!=null)
+                            {
+                                try
+                                {
+                                MemoryStream ms = new();
+                                ms.Write(photo, 78, photo.Length - 78);
+                                var base64 = Convert.ToBase64String(ms.ToArray());
+                                imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+
+                                }
+                                catch (Exception ex)
+                                {
+                            
+                            
+                                }
+                                } 
+
+                            }
+                        }
+                }
+                
+                <td><img src="@imgSrc" class="img-tumbnail"/></td>
+
+            </tr>
+        }
+
+    </tbody>
+
+</table>
