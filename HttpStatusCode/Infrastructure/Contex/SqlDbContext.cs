@@ -16,7 +16,8 @@ namespace HttpStatusCode.Infrastructure.Contex
 
         }
         public DbSet<Category> Categories { get; set; }
-
+        public DbSet<Sehir> Sehirler { get; set; }
+        public DbSet<Ilce> Ilceler { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new CategorySeedData());

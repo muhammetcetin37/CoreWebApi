@@ -60,7 +60,7 @@ namespace HttpStatusCode.Migrations
                         new
                         {
                             Id = 1,
-                            CreateDate = new DateTime(2022, 6, 30, 11, 59, 1, 740, DateTimeKind.Local).AddTicks(7122),
+                            CreateDate = new DateTime(2022, 7, 4, 11, 5, 20, 132, DateTimeKind.Local).AddTicks(669),
                             DeleteDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Elektronik",
                             Name = "Elektronik",
@@ -69,7 +69,7 @@ namespace HttpStatusCode.Migrations
                         new
                         {
                             Id = 2,
-                            CreateDate = new DateTime(2022, 6, 30, 11, 59, 1, 740, DateTimeKind.Local).AddTicks(7135),
+                            CreateDate = new DateTime(2022, 7, 4, 11, 5, 20, 132, DateTimeKind.Local).AddTicks(682),
                             DeleteDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Tekstil",
                             Name = "Tekstil",
@@ -78,7 +78,7 @@ namespace HttpStatusCode.Migrations
                         new
                         {
                             Id = 3,
-                            CreateDate = new DateTime(2022, 6, 30, 11, 59, 1, 740, DateTimeKind.Local).AddTicks(7138),
+                            CreateDate = new DateTime(2022, 7, 4, 11, 5, 20, 132, DateTimeKind.Local).AddTicks(682),
                             DeleteDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Yiyecek",
                             Name = "Yiyecek",
@@ -87,7 +87,7 @@ namespace HttpStatusCode.Migrations
                         new
                         {
                             Id = 4,
-                            CreateDate = new DateTime(2022, 6, 30, 11, 59, 1, 740, DateTimeKind.Local).AddTicks(7138),
+                            CreateDate = new DateTime(2022, 7, 4, 11, 5, 20, 132, DateTimeKind.Local).AddTicks(682),
                             DeleteDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "İçecek",
                             Name = "İçecek",
@@ -96,12 +96,91 @@ namespace HttpStatusCode.Migrations
                         new
                         {
                             Id = 5,
-                            CreateDate = new DateTime(2022, 6, 30, 11, 59, 1, 740, DateTimeKind.Local).AddTicks(7138),
+                            CreateDate = new DateTime(2022, 7, 4, 11, 5, 20, 132, DateTimeKind.Local).AddTicks(685),
                             DeleteDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Nalburiye",
                             Name = "Nalburiye",
                             Status = 0
                         });
+                });
+
+            modelBuilder.Entity("HttpStatusCode.Models.DTOs.Entities.Concrete.Ilce", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DeleteDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("IlceAdi")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SehirId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SehirId");
+
+                    b.ToTable("Ilceler");
+                });
+
+            modelBuilder.Entity("HttpStatusCode.Models.DTOs.Entities.Concrete.Sehir", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DeleteDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SehirAdi")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Sehirler");
+                });
+
+            modelBuilder.Entity("HttpStatusCode.Models.DTOs.Entities.Concrete.Ilce", b =>
+                {
+                    b.HasOne("HttpStatusCode.Models.DTOs.Entities.Concrete.Sehir", "Sehir")
+                        .WithMany("Ilce")
+                        .HasForeignKey("SehirId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Sehir");
+                });
+
+            modelBuilder.Entity("HttpStatusCode.Models.DTOs.Entities.Concrete.Sehir", b =>
+                {
+                    b.Navigation("Ilce");
                 });
 #pragma warning restore 612, 618
         }
