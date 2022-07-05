@@ -56,7 +56,7 @@ namespace CoreMvcPersonel.Controllers
                 Fotograf foto = new Fotograf();
 
                 //projenin çalıştıgı wwwroot klasorunun yolunu verir
-                string wwwrootPath = hostEnvironment.WebRootPath;
+                string wwwrootPath = hostEnvironment.WebRootPath + "\\Images";
 
                 //kullanıcıdan gelen dosya ismi
                 string fileName = Path.GetFileNameWithoutExtension(dTO.PhotoUrl.FileName);
@@ -65,14 +65,27 @@ namespace CoreMvcPersonel.Controllers
                 fileName += DateTime.Now.ToString("yymmddhhmmss") + Path.GetExtension(dTO.PhotoUrl.FileName);
                 foto.Path = Path.Combine(wwwrootPath, fileName);
 
-                //oluşturulan dosyanın verilen path e yazılması
+                //oluşturulan dosyanın verilen path e yazılması,Fiziksel olarak wwwroot/Image klasorune yazacaktır
                 using (var fileStream = new FileStream(foto.Path, FileMode.CreateNew))
                 {
                     dTO.PhotoUrl.CopyTo(fileStream);
                 }
 
                 #endregion
-
+                #region Fotonun Db ye yazılması için
+                using (var memoryStream = new MemoryStream())
+                {
+                    dTO.PhotoUrl.CopyTo(memoryStream);
+                    if (memoryStream.Length < 2097152)// 2 mb dan kucuk ise
+                    {
+                        foto.Foto = memoryStream.ToArray();
+                    }
+                }
+                #endregion
+                p.Fotograflar.Add(foto);
+                sqlContext.Personeller.Add(p);
+                sqlContext.SaveChanges();
+                return RedirectToAction("Index", "Personel");
 
             }
 
