@@ -9,11 +9,12 @@ namespace CoreMvcPersonel.Controllers
     public class PersonelController : Controller
     {
         private readonly SqlContext sqlContext;
+        private readonly IWebHostEnvironment hostEnvironment;
 
-        public PersonelController(SqlContext sqlContext)
+        public PersonelController(SqlContext sqlContext, IWebHostEnvironment hostEnvironment)
         {
             this.sqlContext = sqlContext;
-
+            this.hostEnvironment = hostEnvironment;
         }
         public IActionResult Index()
         {
@@ -31,33 +32,52 @@ namespace CoreMvcPersonel.Controllers
             return View(personel);
         }
         [HttpPost]
-        public async Task<IActionResult> Create(PersonelCreateDTO dTO)
+        public IActionResult Create(PersonelCreateDTO dTO)
         {
             if (ModelState.IsValid)
             {
-                Personel personel = new();
-
-                Fotograf fotograf = new Fotograf();
-                using (var memoryStram = new MemoryStream())
+                Personel p = new Personel();
+                p.Ad = dTO.Ad;
+                p.Soyad = dTO.Soyad;
+                p.Email = dTO.Email;
+                p.TcNo = dTO.TcNo;
+                p.Gsm = dTO.Gsm;
+                p.Fotograflar = new List<Fotograf>();
+                p.Adresler = new List<Adres>();
+                Adres yeniAdres = new Adres
                 {
-                    await dTO.PhotoUrl.CopyToAsync(memoryStram);
-                    if (memoryStram.Length < 2097152) // 2 mb 'dan kucuk ise
-                    {
-                        fotograf.Foto = memoryStram.ToArray();
+                    SehirId = dTO.Adres.SehirId,
+                    IlceId = dTO.Adres.IlceId,
+                    AdresTip = AdresTip.Ev
+                };
+                p.Adresler.Add(yeniAdres);
 
-                    }
+                #region Fotograf işlemleri
+                Fotograf foto = new Fotograf();
+
+                //projenin çalıştıgı wwwroot klasorunun yolunu verir
+                string wwwrootPath = hostEnvironment.WebRootPath;
+
+                //kullanıcıdan gelen dosya ismi
+                string fileName = Path.GetFileNameWithoutExtension(dTO.PhotoUrl.FileName);
+
+                //diger dosyalar ile karışmasın diye verdigimiz tarih formatı
+                fileName += DateTime.Now.ToString("yymmddhhmmss") + Path.GetExtension(dTO.PhotoUrl.FileName);
+                foto.Path = Path.Combine(wwwrootPath, fileName);
+
+                //oluşturulan dosyanın verilen path e yazılması
+                using (var fileStream = new FileStream(foto.Path, FileMode.CreateNew))
+                {
+                    dTO.PhotoUrl.CopyTo(fileStream);
                 }
-                personel.Ad = dTO.Ad;
-                personel.Soyad = dTO.Soyad;
-                personel.TcNo = dTO.TcNo;
-                personel.Email = dTO.Email;
-                personel.Gsm = dTO.Gsm;
-                personel.Fotograflar = new List<Fotograf>();
-                personel.Fotograflar.Add(fotograf);
-                sqlContext.Personeller.Add(personel);
-                sqlContext.SaveChanges();
+
+                #endregion
+
+
             }
-            return View();
+
+
+            return View(dTO);
         }
     }
 }
