@@ -36,8 +36,8 @@
                         <span asp-validation-for="TcNo"></span>
                     </div>
                      <div class="form-group">
-                        <label asp-for="Adres.SehirID" class="control-label">Sehir</label>
-                        <select asp-for="Adres.SehirID" id="sehirlerCombo">
+                        <label asp-for="Adres.SehirId" class="control-label">Sehir</label>
+                        <select asp-for="Adres.SehirId" id="sehirlerCombo">
                             <option>Seciniz</option>
                         </select>
                         
@@ -49,11 +49,7 @@
                         </select>
                         
                     </div>
-                     <div class="form-group">
-                        <label asp-for="PhotoUrl" class="control-label"></label>
-                        <input asp-for="PhotoUrl" class="form-control" accept="image/*"/>
-                        
-                    </div>
+                
                     <div class="form-group">
                         <input type="submit" value="Kaydet" class="btn btn-primary"/>
                     </div>
@@ -67,55 +63,46 @@
 @section Scripts
 {
     <script type="text/javascript">
+    
+    $(document).ready(function() {    // Bütün Dokuman yuklendikten conra aşagidaki kodlar calissin.
+       
+        var sehirlerUrl = "http://localhost:5202/api/Sehir";
         
-    $(document).ready(function() {
-        alert("Deneme");
-        var url = "http://localhost:5254/api/Sehir";
-        console.log(url);
         $.ajax({
-            url:url,
-            type:'GET',
-            dataType:'json',
-            success: function(result) 
-            { 
-                console.log(result);
-                //for (let i = 1; i < result.count; i++) { 
-                    
-                //$("#sehirlerCombo").append("<option value="+i +">" + result[i].sehirAdi+"</option>")
+            url: sehirlerUrl,
+            type: 'GET',
+            dataType: 'json',
+            success: function(result) {
+                for (let key in result) {
+                    $("#sehirlerCombo")
+                    .append("<option value=" + result[key].id + ">" + result[key].sehirAdi + "</option>");
 
-                //} 
-                
-                for (let key in result) 
-                { 
-                    console.log(key + " " + result.sehirAdi);
-                $("#sehirlerCombo").append("<option value="+result[key].id+">" + result[key].sehirAdi+"</option>")
                 }
             }
+        });//Ajax
+
+        //SehirlerCombo degisklik oldugunda yapilacaklar
+        $("#sehirlerCombo").change(function() {
+            var sehirId = $(this).find(":selected").val();
+            var ilceUrl = "http://localhost:5202/api/Ilce?sehirId=" + sehirId;
+            $.ajax({
+            url: ilceUrl,
+            type: 'GET',
+            dataType: 'json',
+            success: function(result) {
+                console.log(result);
+                $("#ilcelerCombo").children().remove();
+                for (let key in result) {
+                    $("#ilcelerCombo")
+                    .append("<option value=" + result[key].id + ">" + result[key].ilceAdi + "</option>");
+
+                }
+            }
+        });//Ajax
 
         });
-        $("#sehirlerCombo").change(function() { 
-            var sehirId = $(this).find(":selected").val();
-            var sehir=$(this).find(":selected").text();
-            console.log(sehirId + " => " + sehir)
 
-            var ilceUrl = "http://localhost:5254/api/Ilce?sehirId=" + sehirId;
-            //alert(ilceUrl);
-            
-            $.ajax({
-                url: ilceUrl,
-                type:'GET',
-                dataType:'json',
-                success: function(result) { 
-                    $("#ilcelerCombo").children().remove();
-                    console.log(result);
-                    for (let key in result) { 
-                        $("#ilcelerCombo").append("<option value=" + key + ">" + result[key].ilceAdi + "</option>");
-                    }      
-                }
-
-
-            });//Ajax 
-        })
-    });
+    })
+       
     </script>
 }

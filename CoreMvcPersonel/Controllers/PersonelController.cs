@@ -1,5 +1,6 @@
 ﻿using CoreMvcPersonel.Models.Contexts;
 using CoreMvcPersonel.Models.DTOs.PersonelDTOs;
+using CoreMvcPersonel.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

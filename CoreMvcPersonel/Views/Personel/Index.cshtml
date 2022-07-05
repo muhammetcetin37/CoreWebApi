@@ -28,29 +28,29 @@
                 @{
                     byte[]? photo;
                     string imgSrc = null;
-                    if (personel.Fotograflar.Count > 0)
-                    {
-                        foreach (var resim in personel.Fotograflar)
-                        {
-                            photo = resim.Foto;
+                    //if (personel.Fotograflar.Count > 0)
+                    //{
+                    //    foreach (var resim in personel.Fotograflar)
+                    //    {
+                    //        photo = resim.Foto;
 
-                            if (photo != null)
-                            {
-                                try
-                                {
-                                    MemoryStream ms = new();
-                                    ms.Write(photo, 78, photo.Length - 78);
-                                    var base64 = Convert.ToBase64String(ms.ToArray());
-                                    imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                    //        if (photo != null)
+                    //        {
+                    //            try
+                    //            {
+                    //                MemoryStream ms = new();
+                    //                ms.Write(photo, 78, photo.Length - 78);
+                    //                var base64 = Convert.ToBase64String(ms.ToArray());
+                    //                imgSrc = String.Format("data:image/gif;base64,{0}", base64);
 
-                                }
-                                catch (Exception ex)
-                                {
-                                }
-                            }
+                    //            }
+                    //            catch (Exception ex)
+                    //            {
+                    //            }
+                    //        }
 
 
-                        }
+                    //    }
                     }
                 }
                 
